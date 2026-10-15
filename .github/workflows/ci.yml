@@ -1,0 +1,33 @@
+name: Quality checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      MONGOMS_DOWNLOAD_DIR: ${{ github.workspace }}/.cache/mongodb-binaries
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            backend/package-lock.json
+            client/frontend/package-lock.json
+      - run: npm ci
+      - run: npm run setup
+      - uses: actions/cache@v4
+        with:
+          path: .cache/mongodb-binaries
+          key: mongodb-8.2.6-${{ runner.os }}
+      - run: npx --prefix client/frontend playwright install --with-deps chromium
+      - run: npm run check:release
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-results
+          path: client/frontend/test-results
+          if-no-files-found: ignore

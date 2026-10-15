@@ -1,7 +1,8 @@
+import Navbar from "../components/Navbar.jsx";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../axiosCalls/axios";
+import { registerCustomer } from "../services/api.js";
 const Signup = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -20,24 +21,26 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loader) return;
     setErr(null);
 
     setLoader(true);
     try {
-      const res = await axiosInstance.post("/users/register", form);
+      await registerCustomer(form);
         navigate("/login", {
           state: { message: "Account created. Please log in." },
         });
     } catch (error) {
-      setErr(error.response.data.message || "Unable to create your account.");
-      console.log(error.response.data.message)
+      setErr(error.response?.data?.message || "Unable to create your account.");
     } finally {
       setLoader(false);
     }
   };
 
   return (
-    <div className="auth-page grid min-h-[750px] w-full lg:grid-cols-2 bg-stone-50/50">
+    <>
+    <Navbar />
+    <div className="auth-page route-enter grid min-h-[750px] w-full lg:grid-cols-2 bg-stone-50/50">
       {/* Left Aside Section - Expanded vertical padding & layout */}
       <div className="auth-aside signup-aside flex flex-col justify-between px-6 py-16 sm:px-16 lg:px-[10vw] lg:py-28 bg-stone-900 text-stone-50">
         <div>
@@ -155,6 +158,7 @@ const Signup = () => {
         </p>
       </div>
     </div>
+    </>
   );
 };
 

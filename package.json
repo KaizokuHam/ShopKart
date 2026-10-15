@@ -1,0 +1,27 @@
+{
+  "name": "shopkart",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ShopKart storefront with authenticated shopping, wishlists and verified Razorpay Test Mode checkout.",
+  "engines": { "node": "^22.13.0 || >=24.0.0" },
+  "scripts": {
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,green\" \"npm run backend\" \"npm run client\"",
+    "backend": "npm run dev --prefix backend",
+    "backend:start": "npm run start --prefix backend",
+    "client": "npm run dev --prefix client/frontend",
+    "client:build": "npm run build --prefix client/frontend",
+    "test": "npm run test --prefix backend && npm run test --prefix client/frontend",
+    "lint": "node scripts/check-backend.mjs && npm run lint --prefix client/frontend",
+    "setup": "npm ci --prefix backend && npm ci --prefix client/frontend",
+    "seed": "npm run seed --prefix backend",
+    "build": "npm run client:build",
+    "preview": "npm run preview --prefix client/frontend",
+    "check": "npm run lint && npm test && npm run build",
+    "test:integration": "npm run test:integration --prefix backend",
+    "test:e2e": "npm run test:e2e --prefix client/frontend",
+    "check:release": "npm run check && npm run test:integration && npm run test:e2e"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

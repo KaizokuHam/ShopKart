@@ -1,122 +1,46 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar.jsx";
+import SiteFooter from "../components/SiteFooter.jsx";
+import Icon from "../components/Icon.jsx";
 
-const Landing = () => {
-  return (
-    <div className="landing-page overflow-hidden">
-      <header className="site-header sticky top-0 z-20 h-[78px] border-b border-[var(--line)] bg-[var(--paper)]/95 px-5 backdrop-blur sm:px-10 lg:px-[76px]">
-        <Link
-          className="brand transition-colors hover:text-[var(--coral)]"
-          to="/"
-        >
-          shop<span>kart</span>
-        </Link>
-        <nav
-          className="main-nav hidden gap-8 md:flex"
-          aria-label="Main navigation"
-        >
-          <NavLink className="transition-colors" to="/home">
-            Shop
-          </NavLink>
-          <a className="transition-colors" href="/#categories">
-            Categories
-          </a>
-          <a className="transition-colors" href="/#deals">
-            Deals
-          </a>
-        </nav>
-        <div className="header-actions flex items-center gap-3 sm:gap-5">
-          <button
-            className="icon-button rounded-full p-1 transition-colors hover:bg-[var(--butter)]"
-            type="button"
-            aria-label="Search"
-          >
-            ⌕
-          </button>
-          <Link
-            className="cart-link transition-colors hover:text-[var(--coral)]"
-            to="/home"
-            aria-label="Shopping cart"
-          >
-            Cart <span>0</span>
-          </Link>
-          <Link
-            className="header-login hidden transition-colors hover:text-[var(--coral)] sm:block"
-            to="/login"
-          >
-            Log in
-          </Link>
-        </div>
-      </header>
-      <section className="landing-hero grid min-h-[590px] items-center gap-10 px-5 py-14 sm:px-10 lg:grid-cols-2 lg:px-[10%]">
-        <div className="hero-copy">
-          <p className="eyebrow">A better way to browse</p>
-          <h1 className="max-w-[620px] text-5xl leading-[.94] sm:text-7xl lg:text-[86px]">
-            Find your next <em>favourite</em> thing.
-          </h1>
-          <p className="hero-text max-w-[390px] text-base leading-7">
-            A considered collection of everyday pieces, clever upgrades, and
-            little joys for your home and life.
-          </p>
-          <Link className="primary-button mt-8 inline-flex min-h-[50px] items-center justify-center gap-5 px-5 shadow-[6px_6px_0_var(--coral)] transition-transform hover:-translate-y-1" to="/home">
-            Start shopping <span>→</span>
-          </Link>
-        </div>
-        <div
-          className="hero-art"
-          aria-label="A selection of colorful ShopKart products"
-          role="img"
-        >
-          <div className="art-sun"></div>
-          <div className="art-card card-one">
-            NEW
-            <br />
-            <strong>ARRIVALS</strong>
-          </div>
-          <div className="art-card card-two">
-            soft
-            <br />
-            <strong>utility</strong>
-          </div>
-          <div className="art-orb"></div>
-        </div>
-      </section>
-      <section className="category-strip grid grid-cols-2 border-b border-[var(--line)] lg:grid-cols-4" id="categories">
-        <div className="border-b border-[var(--line)] p-6 transition-colors hover:bg-[var(--butter)] lg:border-b-0">
-          <span className="category-icon text-2xl">◒</span>
-          <strong>Home</strong>
-          <small>Make space yours</small>
-        </div>
-        <div className="border-b border-[var(--line)] p-6 transition-colors hover:bg-[var(--butter)] lg:border-b-0 lg:border-r-0">
-          <span className="category-icon">✦</span>
-          <strong>Wear</strong>
-          <small>Keep it comfortable</small>
-        </div>
-        <div className="p-6 transition-colors hover:bg-[var(--butter)]">
-          <span className="category-icon">⌁</span>
-          <strong>Tech</strong>
-          <small>Smart, not flashy</small>
-        </div>
-        <div className="p-6 transition-colors hover:bg-[var(--butter)]">
-          <span className="category-icon">♡</span>
-          <strong>Gifts</strong>
-          <small>For every kind of person</small>
-        </div>
-      </section>
-      <section className="landing-note mx-auto max-w-xl px-6 py-24 text-center" id="deals">
-        <p className="eyebrow">Why ShopKart</p>
-        <h2 className="text-4xl leading-none sm:text-5xl">The good stuff, without the noise.</h2>
-        <p>
-          We look for quality, useful design, and prices that make sense. No
-          endless scrolling required.
-        </p>
-      </section>
-      <footer className="site-footer flex flex-wrap items-center gap-3 border-t border-[var(--line)] px-5 py-7 sm:gap-6 sm:px-10 lg:px-[76px]">
-        <span>shopkart</span>
-        <p>Good things, fairly priced.</p>
-        <small>© 2026 ShopKart</small>
-      </footer>
-    </div>
-  );
-};
+const collections = [
+  { name: "At home", detail: "Objects that make a space yours", category: "Home", image: "photo-1600210492486-724fe5c67fb0" },
+  { name: "Everyday wear", detail: "A little comfort. A lot of character.", category: "Fashion", image: "photo-1483985988355-763728e1935b" },
+  { name: "Good connections", detail: "Clever upgrades for everyday life", category: "Electronics", image: "photo-1505740420928-5e560c06d30e" },
+  { name: "Slow moments", detail: "Find your next favourite read", category: "Books", image: "photo-1507842217343-583bb7270b66" },
+];
 
-export default Landing;
+export default function Landing() {
+  return <div className="landing-page">
+    <div className="announcement">Good things, thoughtfully selected <span>✦</span> Welcome to your everyday edit</div>
+    <Navbar />
+    <section className="premium-hero">
+      <div className="hero-copy" data-reveal>
+        <p className="eyebrow hero-kicker">The art of everyday living</p>
+        <h1 className="hero-title">Everyday,<br /><em>extraordinary.</em></h1>
+        <p className="hero-description">For the spaces you love. The rituals you keep.<br />Discover considered essentials that make the everyday feel a little more special.</p>
+        <div className="hero-actions"><Link className="primary-button" to="/products">Explore the collection <Icon name="arrow" size={18} /></Link><a className="text-link" href="#collections">Find your edit</a></div>
+        <div className="hero-footnote"><span className="mini-mark"><Icon name="leaf" size={16} /></span><p><strong>Less noise. More good things.</strong>Useful design, with a little soul.</p></div>
+      </div>
+      <div className="hero-scene" data-reveal>
+        <img className="hero-photo" src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1100&q=85" alt="A sunlit living room with considered furniture and natural textures" fetchPriority="high" />
+        <div className="scene-label"><span>A considered collection</span><strong>Make room for good.</strong></div>
+        <div className="scene-seal" aria-hidden="true"><span>ShopKart</span><b>the edit</b><span>Everyday essentials</span></div>
+        <div className="scene-caption"><strong>01 / The everyday edit</strong><span>Made for your kind of living</span></div>
+      </div>
+    </section>
+    <div className="marquee" aria-label="Thoughtful design, everyday essentials, a little more considered"><div className="marquee-track" aria-hidden="true">{[0,1].map(i => <span key={i}>THOUGHTFUL DESIGN <i>✦</i> EVERYDAY ESSENTIALS <i>✦</i> A LITTLE MORE CONSIDERED <i>✦</i> GOOD THINGS, FAIRLY PRICED <i>✦</i></span>)}</div></div>
+    <section className="collection-section" id="collections">
+      <div className="section-heading" data-reveal><div><span className="eyebrow">Find your everyday favourites</span><h2>A collection for <em>your life.</em></h2></div><Link className="text-link" to="/products">Discover all products ↗</Link></div>
+      <div className="category-grid">{collections.map((collection, index) => <Link className="category-tile" data-reveal key={collection.name} to={"/products?category=" + collection.category}>
+        <div className="category-image"><img loading="lazy" src={"https://images.unsplash.com/" + collection.image + "?auto=format&fit=crop&w=600&q=80"} alt={collection.name + " collection"} /><span className="category-number">0{index + 1}</span></div>
+        <div className="category-meta"><div><h3>{collection.name}</h3><small>{collection.detail}</small></div><Icon name="arrow" size={19} /></div>
+      </Link>)}</div>
+    </section>
+    <section className="brand-story" id="our-story">
+      <img className="story-image" loading="lazy" src="https://images.unsplash.com/photo-1449247709967-d4461a6a6103?auto=format&fit=crop&w=1100&q=80" alt="A warm, quiet home filled with natural light" />
+      <div className="story-copy" data-reveal><span className="eyebrow">Our philosophy</span><h2>Good things.<br /><em>Chosen with care.</em></h2><p>We believe the things you bring into your life should earn their place. Beautiful to look at. A joy to use. And always, fairly priced.</p><Link to="/products" className="text-link">Find something worth keeping ↗</Link></div>
+    </section>
+    <SiteFooter />
+  </div>;
+}

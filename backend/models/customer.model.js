@@ -8,7 +8,9 @@ const customerSchema = new mongoose.Schema({
     email:{
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        trim: true,
+        lowercase: true
     },
     password: {
         type: String,
@@ -17,7 +19,32 @@ const customerSchema = new mongoose.Schema({
     phone: {
         type: String,
         required: true
-    }
+    },
+    authVersion: { type: Number, default: 0, min: 0, validate: Number.isSafeInteger },
+    wishlist: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product"
+        }
+    ],
+    cart: [
+        {
+            product: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Product",
+                required: true
+            },
+            quantity: {
+                type: Number,
+                default: 1,
+                min: [1, "Quantity cannot be less than 1"],
+                validate: Number.isSafeInteger
+            }
+        }
+    ]
+}, {
+    timestamps: true,
+    optimisticConcurrency: true
 })
 
 const Customer = mongoose.model('Customer',customerSchema)

@@ -1,40 +1,33 @@
-import express from 'express'
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-import dns from 'dns'
-import cookieParser from 'cookie-parser'
-import customerRoutes from './routes/customer.route.js'
-import cors from 'cors'
-import productRoutes from './routes/product.route.js'
-const app = express()
-const Port = 8085
-dotenv.config()
+import "./config/env.js";
+import mongoose from "mongoose";
+import { createApp } from "./app.js";
+import { validateRuntimeConfig } from "./config/runtime.js";
 
-dns.setServers([
-  '8.8.8.8', // Google DNS
-  '8.8.4.4'
-]);
-
-app.use(express.json())
-app.use(cookieParser())
-app.use(cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
-    credentials: true
-}))
-app.use('/users',customerRoutes)
-app.use('/products', productRoutes)
-mongoose.connect(process.env.dbUrl).then(() => {
-    console.log("Db Connected")
-}).catch((err) => {
-    console.log(err)
-})
-
-
-app.get("/",(req,res)=>{
-    res.send("Hello")
-})
-
-app.listen(Port , ()=>{
-    console.log(`Server Started at ${Port}`)
-})
-
+try {
+  validateRuntimeConfig();
+  mongoose.set("bufferCommands", false);
+  await mongoose.connect(process.env.dbUrl, { serverSelectionTimeoutMS: 10000 });
+  const topology = await mongoose.connection.db.admin().command({ hello: 1 });
+  if (!topology.setName && topology.msg !== "isdbgrid") throw new Error("Checkout requires a MongoDB replica set or sharded deployment; standalone MongoDB is unsupported");
+  await Promise.all(Object.values(mongoose.models).map(model => model.init()));
+  const server = createApp().listen(process.env.PORT || 8085, () => console.log(`ShopKart API listening on port ${process.env.PORT || 8085}`));
+  server.on("error", async error => {
+    console.error("HTTP server failed:", error.message);
+    await mongoose.disconnect();
+    process.exitCode = 1;
+  });
+  const shutdown = () => {
+    const deadline = setTimeout(() => process.exit(1), 10000);
+    deadline.unref();
+    server.close(async () => {
+      await mongoose.disconnect();
+      clearTimeout(deadline);
+    });
+  };
+  process.once("SIGINT", shutdown);
+  process.once("SIGTERM", shutdown);
+} catch (error) {
+  console.error("Startup failed:", error.message);
+  await mongoose.disconnect();
+  process.exitCode = 1;
+}
